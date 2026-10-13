@@ -276,22 +276,41 @@ clip('C1_S4-CG03-05_Counter_48_FirstClass', 9, (ctx, t) => {
   if (burst > 0 && burst < 1) { ctx.save(); ctx.strokeStyle = hexA(C.glow, (1 - burst) * .7); ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(960, 480, 200 + 260 * E.outCubic(burst), 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
 }, { desc: 'เส้นสายวิ่งเร็ว + ตัวเลขหมุน 0→48 (จบที่ 3.4 วิ)' });
 
-clip('C1_S4-CG06_Stamp_17May2549', 5, (ctx, t) => {
-  const p = prog(t, .2, .45), out = prog(t, 4.5, 5);
+clip('C1_S4_Stamp_17May2549', 5, (ctx, t) => {
+  const p = prog(t, .15, .42), out = prog(t, 4.5, 5);
   if (p <= 0) return;
-  const s = lerp(2.2, 1, E.inCubic(p)), x = 1500, y = 820;
-  ctx.save(); ctx.globalAlpha = (p < 1 ? p : 1) * (1 - out); ctx.translate(x, y); ctx.rotate(-.12); ctx.scale(s, s);
-  ctx.strokeStyle = C.gold; ctx.lineWidth = 6; roundRect(ctx, -230, -92, 460, 170, 18); ctx.stroke();
-  ctx.lineWidth = 2; roundRect(ctx, -218, -80, 436, 146, 12); ctx.stroke();
+  const s = lerp(2.4, 1, E.inCubic(p)) * (1 + .03 * Math.sin(Math.PI * prog(t, .42, .62))), x = 1480, y = 830, rot = -.1;
+  const a = Math.min(1, p * 1.4) * (1 - out);
+  const foil = (c) => { const g = c.createLinearGradient(-260, -110, 260, 110); g.addColorStop(0, '#8C5E1A'); g.addColorStop(.25, '#F7D88A'); g.addColorStop(.45, '#B9842E'); g.addColorStop(.65, '#FFE9A8'); g.addColorStop(1, '#94661F'); return g; };
+  ctx.save(); ctx.globalAlpha = a; ctx.translate(x, y); ctx.rotate(rot); ctx.scale(s, s);
+  // drop shadow plate
+  ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 10;
+  roundRect(ctx, -250, -105, 500, 196, 22); ctx.fillStyle = 'rgba(20,14,4,.55)'; ctx.fill();
+  ctx.shadowColor = 'transparent';
+  ctx.lineWidth = 8; ctx.strokeStyle = foil(ctx); roundRect(ctx, -250, -105, 500, 196, 22); ctx.stroke();
+  ctx.lineWidth = 2.5; roundRect(ctx, -234, -89, 468, 164, 14); ctx.stroke();
+  // little stars on the sides
+  ctx.fillStyle = foil(ctx);
+  [-208, 208].forEach(sx => { ctx.save(); ctx.translate(sx, -6); ctx.rotate(Math.PI / 4); ctx.fillRect(-6, -6, 12, 12); ctx.restore(); });
+  ctx.font = '700 70px Kanit'; ctx.textAlign = 'center'; ctx.fillStyle = foil(ctx);
+  ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 4; ctx.shadowOffsetY = 2;
+  ctx.fillText('17 พ.ค. 2549', 0, 6);
+  ctx.font = '500 27px Sarabun'; ctx.fillText('วันรายงานตัว นักศึกษาแพทย์รุ่นแรก', 0, 56);
+  ctx.shadowColor = 'transparent';
+  // specular sheen sweep across the foil
+  const sw = prog(t, 1.0, 2.2);
+  if (sw > 0 && sw < 1) {
+    ctx.globalCompositeOperation = 'source-atop';
+    const sx = lerp(-420, 420, E.inOutCubic(sw));
+    const g = ctx.createLinearGradient(sx - 80, -120, sx + 80, 120); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(.5, 'rgba(255,250,230,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g; ctx.fillRect(-260, -120, 520, 240);
+    ctx.globalCompositeOperation = 'source-over';
+  }
   ctx.restore();
-  ctx.save(); ctx.globalAlpha = (1 - out); ctx.translate(x, y); ctx.rotate(-.12); ctx.scale(s, s);
-  text(ctx, '17 พ.ค. 2549', 0, -4, { size: 62, weight: 700, color: C.gold, align: 'center', shadow: false });
-  text(ctx, 'วันรายงานตัว นศพ. รุ่นแรก', 0, 48, { size: 30, weight: 500, color: C.gold, align: 'center', fam: FONT_BODY, shadow: false });
-  ctx.restore();
-  // impact ring
-  const ir = prog(t, .45, 1.0);
-  if (ir > 0 && ir < 1) { ctx.save(); ctx.strokeStyle = hexA(C.gold, 1 - ir); ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(x, y, 260 + ir * 120, 110 + ir * 60, -.12, 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
-}, { desc: 'ตราประทับวันที่ วางมุมขวาล่างบนภาพถ่ายรุ่นแรก' });
+  // impact dust ring
+  const ir = prog(t, .42, 1.1);
+  if (ir > 0 && ir < 1) { ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.strokeStyle = `rgba(247,216,138,${(1 - ir) * .7})`; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(0, 0, 270 + ir * 140, 120 + ir * 70, 0, 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
+}, { desc: 'ตราประทับทองฟอยล์ "17 พ.ค. 2549" กระแทกลง + แสงวาบ (พื้นโปร่งใส วางมุมขวาล่างบนภาพรุ่นแรก)' });
 
 // ===== S5 =====
 function buildTree() {

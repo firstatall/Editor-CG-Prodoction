@@ -1,0 +1,19 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="node_modules/@fontsource/kanit/500.css"><link rel="stylesheet" href="node_modules/@fontsource/kanit/600.css">
+<link rel="stylesheet" href="node_modules/@fontsource/kanit/700.css"><link rel="stylesheet" href="node_modules/@fontsource/sarabun/400.css"><link rel="stylesheet" href="node_modules/@fontsource/sarabun/500.css">
+<style>html,body{margin:0;background:transparent;overflow:hidden}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script src="thailand.js"></script></head><body>
+<script type="module">
+import { loadFonts, FPS } from './kit.js';
+import { CLIPS } from './scenes1.js';
+const name = new URLSearchParams(location.search).get('clip');
+window.listClips = () => Object.entries(CLIPS).map(([n, c]) => ({ name: n, dur: c.dur, mode: c.mode, desc: c.desc }));
+(async () => {
+  await loadFonts();
+  if (name) { const c = CLIPS[name]; window.clipInfo = { dur: c.dur, mode: c.mode }; window.update = await c.build(); }
+  window.renderFrame = f => { window.update(f / FPS); return true; };
+  window.grab = (type, q) => document.querySelector('canvas').toDataURL(type, q);
+  window.ready = true;
+})().catch(e => { window.err = e.stack || String(e); });
+</script></body></html>
