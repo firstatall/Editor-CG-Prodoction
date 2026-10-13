@@ -199,7 +199,7 @@ clip('C1_S2_Timeline_2536-2540_Freeze', 15, 'opaque', 'รางเวลา 3D 
   });
   // giant holographic year in the background
   const bigMat = new THREE.MeshBasicMaterial({ color: hdr(COL.emerald, .35), transparent: true, opacity: .5, depthWrite: false });
-  const big = numberRig(scene, '2536', { size: 3.2, depth: .05, mat: bigMat, fixed: true, weight: 800 }); big.group.position.set(6, 1.3, -8);
+  const big = numberRig(scene, '2536', { size: 3.2, depth: .05, mat: bigMat, fixed: true, weight: 800 }); big.group.position.set(6, .55, -9);
   const freezeAt = 10.4, endX = 4 * STEP + .5;
   const th = new Thread(scene, new THREE.LineCurve3(V(-4, .07, 0), V(endX, .07, 0)), { radius: .028, segs: 600, headSize: .7, taperLen: .05 });
   const run = t => t < freezeAt ? E.inOutSine(prog(t, .8, 8)) * .62 + .38 * E.inCubic(prog(t, 8, freezeAt)) : 1;
@@ -223,7 +223,7 @@ clip('C1_S2_Timeline_2536-2540_Freeze', 15, 'opaque', 'รางเวลา 3D 
     const push = E.inOutSine(prog(t, freezeAt, 15));
     camera.position.set(hx - 2.4 + push * .9, lerp(1.05, .75, push), lerp(3.3, 2.4, push));
     camera.lookAt(hx + .6 - push * .3, .35, 0); camera.fov = lerp(30, 28, push); camera.updateProjectionMatrix();
-    big.group.position.x = hx + 3;
+    big.group.position.x = hx + 5.2;
     flare.set(V(hx, .07, 0), (1 - gray) * .35 * (t < freezeAt + .4 ? 1 : 0), 6);
     st.finish.uniforms.uSat.value = lerp(1, .25, gray);
     sky.material.uniforms.uK.value = lerp(1, .55, gray);
@@ -331,7 +331,7 @@ clip('C1_S4_Counter_48', 9, 'opaque', 'เส้นแสงพุ่งผ่�
   const burst = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: ringTex(), color: hdr(COL.gold, 1.2), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })); scene.add(burst);
   const dust = dustField(scene, 1500, [22, 10, 22], { size: 60, focus: 9, color: COL.gold, k: 1, seed: 21 });
   return t => {
-    streaks.forEach(s => { const u = prog(t, s.st * .7, s.st * .7 + .9), p = u * u; s.th.set(p, clamp(p - .35)); });
+    streaks.forEach(s => { const u = prog(t, s.st * .7, s.st * .7 + 1.1); s.th.set(clamp(u * 1.25) ** 2, clamp((u - .3) / .7) ** 2); });
     const a = E.outQuint(prog(t, 1.2, 3.6));
     num.group.position.set(0, .1, lerp(-30, 0, a)); num.group.rotation.y = lerp(-.9, 0, E.outCubic(prog(t, 1.2, 4.2))) + .03 * Math.sin(t * .7);
     num.group.visible = t > 1.15;
@@ -565,7 +565,7 @@ clip('C1_S8_EndCard_20Years_MedSUT', 8, 'opaque', 'End card — เส้นว�
   const pts = []; for (let i = 0; i <= 80; i++) { const u = i / 80; pts.push(V(lerp(-9, -R, E.inOutSine(u)), lerp(-2.5, cy, E.inOutSine(u)) + Math.sin(u * Math.PI) * .9, lerp(-6, 0, u))); }
   for (let i = 1; i <= 160; i++) { const a = Math.PI + i / 160 * Math.PI * 2; pts.push(V(Math.cos(a) * R, cy + Math.sin(a) * R, 0)); }
   const th = new Thread(scene, new THREE.CatmullRomCurve3(pts), { radius: .03, segs: 1200, headSize: .7, taper: false });
-  const ringLen = 160 / 240;
+  const ringLen = (2 * Math.PI * R) / th.curve.getLength();
   // soft rays behind the ring
   const rays = new THREE.Group(); rays.position.set(0, cy, -1.5); scene.add(rays);
   for (let i = 0; i < 14; i++) { const b = lightBeam(rays, i % 3 ? COL.emerald : COL.gold, 6, .5, .22); b.group.rotation.z = i / 14 * Math.PI * 2; b.group.children.forEach(p => p.rotation.y = 0); }
