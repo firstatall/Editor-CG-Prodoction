@@ -1,0 +1,11 @@
+const topo=require('./node_modules/world-atlas/countries-10m.json');
+const tc=require('topojson-client');
+const f=tc.feature(topo,topo.objects.countries).features.find(f=>f.id==='764');
+const polys=f.geometry.coordinates;
+let minLon=1e9,maxLon=-1e9,minLat=1e9,maxLat=-1e9;
+polys.forEach(p=>p[0].forEach(([lo,la])=>{minLon=Math.min(minLon,lo);maxLon=Math.max(maxLon,lo);minLat=Math.min(minLat,la);maxLat=Math.max(maxLat,la);}));
+const k=Math.cos(13*Math.PI/180), s=900/(maxLat-minLat);
+const cLon=(minLon+maxLon)/2, cLat=(minLat+maxLat)/2;
+const out=polys.filter(p=>p[0].length>=12).map(p=>p[0].map(([lo,la])=>[+((lo-cLon)*k*s).toFixed(1),+(-(la-cLat)*s).toFixed(1)]));
+require('fs').writeFileSync('thailand.js',`const GEO={k:${k},s:${s},cLon:${cLon},cLat:${cLat},polys:${JSON.stringify(out)}};`);
+console.log(out.length, minLon,maxLon,minLat,maxLat, s);

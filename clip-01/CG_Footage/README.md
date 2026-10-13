@@ -12,6 +12,14 @@ Super / Lower third / ข้อความบนจอ ทีมตัดต่
 | `.mp4` | H.264 พื้นทึบ |
 | สี Motif | เขียว `#1FB57A` · เขียวเรือง `#7CF2B8` · เขียวเข้ม `#0B3B36` |
 
+### ไฟล์คู่ FILL + MATTE (6 ชิ้นที่ไฟล์ใหญ่)
+
+`Map_Thailand_580`, `Braid_Agencies`, `Hope_LightSweep`, `Network_Branching`, `580_to_Mosaic_DRAFT`, `Thread_BurstToCamera`
+ส่งเป็น `_FILL.mp4` (ภาพสี) + `_MATTE.mp4` (ขาว-ดำ = ความโปร่งใส) เพราะไฟล์ .mov เกินลิมิตส่งไฟล์ 30MB
+
+**วิธีใช้ใน Premiere:** วาง `_FILL` ที่ V2 และ `_MATTE` ที่ V3 ตรงเฟรมเดียวกัน → ใส่ Effect **Track Matte Key** ที่ `_FILL` → Matte: *Video 3* · Composite Using: *Matte Luma* → ปิดตา (Toggle Output) ของ V3
+(หรือ Nest สองไฟล์รวมเป็น Sequence เดียวก่อน เพื่อขยับ/ตัดพร้อมกันได้ง่าย)
+
 **Premiere:** ถ้าขอบ Glow ดูเป็นสีดำ ให้คลิกขวาที่คลิป → Modify → Interpret Footage → Alpha: *Straight*
 **เคล็ดลับ:** ถ้าวางทับภาพสว่าง ลอง Blend Mode *Screen* ให้ Glow กลืนภาพ
 

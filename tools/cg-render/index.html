@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="node_modules/@fontsource/kanit/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/kanit/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/kanit/600.css">
+<link rel="stylesheet" href="node_modules/@fontsource/kanit/700.css">
+<link rel="stylesheet" href="node_modules/@fontsource/sarabun/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/sarabun/500.css">
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script src="thailand.js"></script><script src="engine.js"></script><script src="clip1.js"></script>
+<script>
+window.fontsReady = (async () => {
+  const fams = [['Kanit',[400,500,600,700]],['Sarabun',[400,500]]];
+  for (const [f, ws] of fams) for (const w of ws) await document.fonts.load(`${w} 40px ${f}`, 'กขคabc0123');
+  return document.fonts.check('600 40px Kanit', 'ก');
+})();
+</script></body></html>
